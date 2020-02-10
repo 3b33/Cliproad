@@ -3,6 +3,8 @@ package com.cliproads;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class Cliproads {
     private JTextField textField1_1;
@@ -49,22 +51,23 @@ public class Cliproads {
 
     public Cliproads() {
 
-        textField1_1.addActionListener(new cellClicked("1_1"));
+        textField1_1.addFocusListener(new cellClicked("1_1")); // https://stackoverflow.com/questions/10133366/how-to-clear-jtextfield-when-mouse-clicks-the-jtextfield
     }
 
-    private class cellClicked implements ActionListener {
+    private class cellClicked implements FocusListener {
 
         private String cellLoc;
-        private String road = "client1_blaablaa.png";
+        private String road = "client1_blaablaa.png"; // this should be replaced with the actual combined string from the active cells
 
         public cellClicked(String loc) {
             this.cellLoc = loc;
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void focusGained(FocusEvent e) {
             tx_info.setText(road);
         }
+        public void focusLost(FocusEvent e) {}
     }
 
     public static void main(String[] args) {
