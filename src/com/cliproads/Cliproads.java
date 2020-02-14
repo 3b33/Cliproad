@@ -1,11 +1,13 @@
 package com.cliproads;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.ArrayList;
+import static javax.swing.JOptionPane.showMessageDialog; // for debugging
+// import java.util.ArrayList; // to be useful if and when I make the gui/cells modifiable
 
 public class Cliproads {
     private JTextField textField1_1;
@@ -45,37 +47,59 @@ public class Cliproads {
     private JLabel clipboardContentsLabel;
     private JTextPane tx_info;
     private JButton saveAsButton;
-    private JComboBox cb_templates;
+    private JComboBox<String> cb_templates;
     private JButton deleteButton;
     private JPanel masterJPanel;
-    private String road = "client1_blaablaa.png"; // this should be replaced with the actual combined string from the active cells
-    private int[] activeCells = {1,2,1,2,3,2,1,0}; // 0 = cell column not in use
-    private JTextField[] cellRow1 = {textField1_1,textField1_2,textField1_3,textField1_4};
-    private JTextField[] cellRow2 = {textField2_1,textField2_2,textField2_3,textField2_4};
-    private JTextField[] cellRow3 = {textField3_1,textField3_2,textField3_3,textField3_4};
-    private JTextField[] cellRow4 = {textField4_1,textField4_2,textField4_3,textField4_4};
-    private JTextField[] cellRow5 = {textField5_1,textField5_2,textField5_3,textField5_4};
-    private JTextField[] cellRow6 = {textField6_1,textField6_2,textField6_3,textField6_4};
-    private JTextField[] cellRow7 = {textField7_1,textField7_2,textField7_3,textField7_4};
-    private JTextField[] cellRow8 = {textField8_1,textField8_2,textField8_3,textField8_4};
-    private JTextField[][] cells = {cellRow1,cellRow2,cellRow3,cellRow4,cellRow5,cellRow6,cellRow7,cellRow8};
+
+    String road = "client1_blaablaa.png"; // this should be replaced with the actual combined string from the active cells
+    private int[] activeCells = {0,1,0,1,2,1,0,-1}; // -1 = cell column not in use
+    final JTextField[] cellRow1 = {textField1_1,textField1_2,textField1_3,textField1_4};
+    final JTextField[] cellRow2 = {textField2_1,textField2_2,textField2_3,textField2_4};
+    final JTextField[] cellRow3 = {textField3_1,textField3_2,textField3_3,textField3_4};
+    final JTextField[] cellRow4 = {textField4_1,textField4_2,textField4_3,textField4_4};
+    final JTextField[] cellRow5 = {textField5_1,textField5_2,textField5_3,textField5_4};
+    final JTextField[] cellRow6 = {textField6_1,textField6_2,textField6_3,textField6_4};
+    final JTextField[] cellRow7 = {textField7_1,textField7_2,textField7_3,textField7_4};
+    final JTextField[] cellRow8 = {textField8_1,textField8_2,textField8_3,textField8_4};
+    final JTextField[][] cells = {cellRow1,cellRow2,cellRow3,cellRow4,cellRow5,cellRow6,cellRow7,cellRow8};
+
 
     public Cliproads() {
 
-        textField1_1.addFocusListener(new cellClicked("1_1")); // https://stackoverflow.com/questions/10133366/how-to-clear-jtextfield-when-mouse-clicks-the-jtextfield
+        for (int col = 0; col < 8; col++) {
+            for (int row = 0; row < 4; row++) {
+                cells[col][row].addFocusListener(new cellClicked(col,row)); // https://stackoverflow.com/questions/10133366/how-to-clear-jtextfield-when-mouse-clicks-the-jtextfield
+            }
+        }
     }
 
     private class cellClicked implements FocusListener {
 
-        private String cellLoc;
+        final int col;
+        final int row;
 
-
-        public cellClicked(String loc) {
-            this.cellLoc = loc;
+        public cellClicked(int c, int r) {
+            col = c;
+            row = r;
         }
 
         @Override
         public void focusGained(FocusEvent e) {
+
+            activeCells[col] = row;
+            road = "";
+            for (int i = 0; i < 8; i++) {
+                if (activeCells[i] != -1) {
+                    String addString = cells[i][activeCells[i]].getText();
+                    if (!addString.equals("")) {
+                        if (!addString.substring(0, 1).equals(".") && !road.equals("")) {
+                            road += tx_separator.getText();
+                        }
+                        road += addString;
+                    }
+
+                }
+            }
             tx_info.setText(road);
         }
         public void focusLost(FocusEvent e) {}
