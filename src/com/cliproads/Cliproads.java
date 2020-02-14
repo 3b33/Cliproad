@@ -2,6 +2,7 @@ package com.cliproads;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -71,6 +72,7 @@ public class Cliproads {
                 cells[col][row].addFocusListener(new cellClicked(col,row)); // https://stackoverflow.com/questions/10133366/how-to-clear-jtextfield-when-mouse-clicks-the-jtextfield
             }
         }
+        tx_separator.addFocusListener(new cellClicked(0,activeCells[0]));
     }
 
     private class cellClicked implements FocusListener {
@@ -100,6 +102,15 @@ public class Cliproads {
 
                 }
             }
+
+            // copy road to clipboard https://stackoverflow.com/questions/6710350/copying-text-to-the-clipboard-using-java
+            Toolkit.getDefaultToolkit()
+                    .getSystemClipboard()
+                    .setContents(
+                            new StringSelection(road),
+                            null
+                    );
+
             tx_info.setText(road);
         }
         public void focusLost(FocusEvent e) {}
