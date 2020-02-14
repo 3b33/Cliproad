@@ -95,10 +95,17 @@ public class Cliproads {
         public void updateRoad() {
             activeCells[col] = row;
             road = "";
+
+            // make background gray on current cell column textfields
+            for (JTextField cell: cells[col]) {
+                cell.setBackground(new Color(235,235,235));
+            }
+
             for (int i = 0; i < 8; i++) {
                 if (activeCells[i] != -1) {
                     String addString = cells[i][activeCells[i]].getText();
                     if (!addString.equals("")) {
+                        cells[i][activeCells[i]].setBackground(new Color(255,255,255));
                         if (!addString.substring(0, 1).equals(".") && !road.equals("")) {
                             road += tx_separator.getText();
                         }
