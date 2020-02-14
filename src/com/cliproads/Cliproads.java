@@ -3,11 +3,7 @@ package com.cliproads;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import static javax.swing.JOptionPane.showMessageDialog; // for debugging
+import java.awt.event.*;
 // import java.util.ArrayList; // to be useful if and when I make the gui/cells modifiable
 
 public class Cliproads {
@@ -70,15 +66,19 @@ public class Cliproads {
         for (int col = 0; col < 8; col++) {
             for (int row = 0; row < 4; row++) {
                 cells[col][row].addFocusListener(new cellClicked(col,row)); // https://stackoverflow.com/questions/10133366/how-to-clear-jtextfield-when-mouse-clicks-the-jtextfield
+                cells[col][row].addKeyListener(new cellClicked(col,row));
             }
         }
         tx_separator.addFocusListener(new cellClicked(0,activeCells[0]));
+        tx_separator.addKeyListener(new cellClicked(0,activeCells[0]));
     }
 
-    private class cellClicked implements FocusListener {
+
+    private class cellClicked implements FocusListener, KeyListener {
 
         final int col;
         final int row;
+
 
         public cellClicked(int c, int r) {
             col = c;
@@ -86,8 +86,13 @@ public class Cliproads {
         }
 
         @Override
-        public void focusGained(FocusEvent e) {
+        public void focusGained(FocusEvent e) { updateRoad(); }
+        public void focusLost(FocusEvent e) {}
+        public void keyTyped(KeyEvent e) {}
+        public void keyPressed(KeyEvent e) {}
+        public void keyReleased(KeyEvent e) { updateRoad(); }
 
+        public void updateRoad() {
             activeCells[col] = row;
             road = "";
             for (int i = 0; i < 8; i++) {
@@ -99,7 +104,6 @@ public class Cliproads {
                         }
                         road += addString;
                     }
-
                 }
             }
 
@@ -113,7 +117,7 @@ public class Cliproads {
 
             tx_info.setText(road);
         }
-        public void focusLost(FocusEvent e) {}
+
     }
 
     public static void main(String[] args) {
