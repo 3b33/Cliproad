@@ -1,9 +1,10 @@
 package com.cliproads;
 
 import javax.swing.*;
-import java.awt.*;
+//import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.util.prefs.Preferences;
 // import java.util.ArrayList; // to be useful if and when I make the gui/cells modifiable
 
 public class Cliproads {
@@ -43,13 +44,12 @@ public class Cliproads {
     private JTextField textField8_4;
     private JLabel clipboardContentsLabel;
     private JTextPane tx_info;
-    private JButton saveAsButton;
+    private JButton saveButton;
     private JComboBox<String> cb_templates;
     private JButton deleteButton;
     private JPanel masterJPanel;
 
-    String road = "client1_blaablaa.png"; // this should be replaced with the actual combined string from the active cells
-    private int[] activeCells = {0,1,0,1,2,1,0,-1}; // -1 = cell column not in use
+    // For easy looping through all the textfields aka cells
     final JTextField[] cellRow1 = {textField1_1,textField1_2,textField1_3,textField1_4};
     final JTextField[] cellRow2 = {textField2_1,textField2_2,textField2_3,textField2_4};
     final JTextField[] cellRow3 = {textField3_1,textField3_2,textField3_3,textField3_4};
@@ -59,6 +59,30 @@ public class Cliproads {
     final JTextField[] cellRow7 = {textField7_1,textField7_2,textField7_3,textField7_4};
     final JTextField[] cellRow8 = {textField8_1,textField8_2,textField8_3,textField8_4};
     final JTextField[][] cells = {cellRow1,cellRow2,cellRow3,cellRow4,cellRow5,cellRow6,cellRow7,cellRow8};
+
+    String[] cellRow1Texts = {textField1_1.getText(),textField1_2.getText(),textField1_3.getText(),textField1_4.getText()};
+    String[] cellRow2Texts = {textField2_1.getText(),textField2_2.getText(),textField2_3.getText(),textField2_4.getText()};
+    String[] cellRow3Texts = {textField3_1.getText(),textField3_2.getText(),textField3_3.getText(),textField3_4.getText()};
+    String[] cellRow4Texts = {textField4_1.getText(),textField4_2.getText(),textField4_3.getText(),textField4_4.getText()};
+    String[] cellRow5Texts = {textField5_1.getText(),textField5_2.getText(),textField5_3.getText(),textField5_4.getText()};
+    String[] cellRow6Texts = {textField6_1.getText(),textField6_2.getText(),textField6_3.getText(),textField6_4.getText()};
+    String[] cellRow7Texts = {textField7_1.getText(),textField7_2.getText(),textField7_3.getText(),textField7_4.getText()};
+    String[] cellRow8Texts = {textField8_1.getText(),textField8_2.getText(),textField8_3.getText(),textField8_4.getText()};
+    String[][] tempCellTexts = {cellRow1Texts, cellRow2Texts, cellRow3Texts, cellRow4Texts, cellRow5Texts, cellRow6Texts, cellRow7Texts, cellRow8Texts};
+
+    // For template saving purposes
+    Preferences userPrefs = Preferences.userNodeForPackage(Cliproads.class);
+
+    String template = userPrefs.get("template", "Default");
+    String[][] cellTexts = userPrefs.get("cellTexts", tempCellTexts);
+    String road = userPrefs.get("road", "client_brand2_logo_black_bgNone_v002.png"); // this should be replaced with the actual combined string from the active cells
+    int[] tempActiveCells = {0,1,0,1,2,1,0,-1};
+
+    private int[] activeCells = userPrefs.get("activeCells", tempActiveCells); // -1 = cell column not in use
+
+
+
+
 
 
     public Cliproads() {
